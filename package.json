@@ -4,7 +4,8 @@
   "description": "This is a repo for the [Snowcodes](https://www.snowcodes.org/) Hackathon. It includes a Discord bot written in Javascript with Node.js engine and powered by my custom made API library for Discord.",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postversion": "git push && git push --tags"
   },
   "repository": {
     "type": "git",
