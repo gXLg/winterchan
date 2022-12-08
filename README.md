@@ -1,4 +1,4 @@
-# snowcodes
+# Winter Chan
 
 This is a repo for the
 [Snowcodes](https://www.snowcodes.org/)
