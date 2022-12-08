@@ -9,7 +9,7 @@
   const fs = require("fs");
   const token = fs.readFileSync(".token", "UTF-8");
 
-  const ds = require("./disnode/ds.js");
+  const ds = require("./disnode");
   const bot = new ds.Bot(token);
 
   const me = await bot.user();
@@ -22,8 +22,8 @@
       "since" : 0,
       "afk" : false,
       "activities" : [{
-        "name" : "snowballs",
-        "type" : 1 // PLAYING
+        "name" : "building a snowman ⛄",
+        "type" : 0 // PLAYING
       }]
     });
 

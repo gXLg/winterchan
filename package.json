@@ -16,8 +16,5 @@
   "bugs": {
     "url": "https://github.com/gXLg/winterchan/issues"
   },
-  "homepage": "https://github.com/gXLg/winterchan#readme",
-  "dependencies": {
-    "ws": "^8.11.0"
-  }
+  "homepage": "https://github.com/gXLg/winterchan#readme"
 }
