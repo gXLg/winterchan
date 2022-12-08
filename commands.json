@@ -1,0 +1,10 @@
+[
+  {
+    "name": "info",
+    "description": "Display information about the bot"
+  },
+  {
+    "name": "snow",
+    "description": "Play the snow game"
+  }
+]

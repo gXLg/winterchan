@@ -27,12 +27,33 @@
       }]
     });
 
-    await bot.sendMessage("751448682393763856", {
+    const testServer = "751448682393763856";
+    await bot.sendMessage(testServer, {
       "content": "I am alive!"
     });
   };
 
   // intents = 0
   bot.login(0);
+
+  const commands = await bot.commands();
+  const should = require("./commands.json");
+  const compare = require("./functions/compare.js");
+  for(const s of should){
+    const same = commands.find(c => c.name == s.name);
+    if(
+      same &&
+      Object.keys(s).every(k => compare(s[k], same[k]))
+    ) continue;
+    console.log("Registering command", s.name);
+    await bot.registerCommand(s);
+  }
+  for(const c of commands){
+    if(
+      should.find(s => s.name == c.name)
+    ) continue;
+    console.log("Removing old command", c.name);
+    await bot.deleteCommand(c.id);
+  }
 
 })();

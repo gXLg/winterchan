@@ -19,80 +19,66 @@ class Bot {
   }
 
   // for getting user info without logging in
-  user(){
-    return new Promise(async resolve => {
-      resolve(this.cache.user ?? (
-        this.cache.user = await this.rest.get("/users/@me")
-      ));
-    });
+  async user(){
+    return this.cache.user ?? (
+      this.cache.user = await this.rest.get("/users/@me")
+    );
   }
 
   // getting a list of all commands
-  commands(){
-    return new Promise(async resolve => {
-      const user = await this.user();
-      resolve(this.cache.commands ?? (
-        this.cache.commands = await this.rest.get("/applications/" + user.id + "/commands")
-      ));
-    });
+  async commands(){
+    const user = await this.user();
+    return this.cache.commands ?? (
+      this.cache.commands = await this.rest.get("/applications/" + user.id + "/commands")
+    );
   }
 
   // register a command
-  registerCommand(command){
-    return new Promise(async resolve => {
-      const user = await this.user();
-      const commands = await this.commands();
-      const result = await this.rest.post("/applications/" + user.id + "/commands", command);
-      const same = commands.find(c => c.id == result.id);
-      if(same) this.cache.commands[commands.indexOf(same)] = result;
-      resolve(result);
-    });
+  async registerCommand(command){
+    const user = await this.user();
+    const commands = await this.commands();
+    const result = await this.rest.post("/applications/" + user.id + "/commands", command);
+    const same = commands.find(c => c.id == result.id);
+    if(same) this.cache.commands[commands.indexOf(same)] = result;
+    return result;
   }
 
   // delete a command
-  deleteCommand(id){
-    return new Promise(async resolve => {
-      const user = await this.user();
-      const commands = await this.commands();
-      const result = await this.rest.del("/applications/" + user.id + "/commands/" + id);
-      this.cache.commands = commands.filter(c => c.id != id);
-      resolve(result);
-    });
+  async deleteCommand(id){
+    const user = await this.user();
+    const commands = await this.commands();
+    const result = await this.rest.del("/applications/" + user.id + "/commands/" + id);
+    this.cache.commands = commands.filter(c => c.id != id);
+    return result;
   }
 
   // getting a list of all guild commands
-  guildCommands(gid){
-    return new Promise(async resolve => {
-      const user = await this.user();
-      if(!this.cache.guildCommands)
-        this.cache.guildCommands = {};
-      resolve(this.cache.guildCommands[gid] ?? (
-        this.cache.guildCommands[gid] = await this.rest.get("/applications/" + user.id + "/guilds/" + gid + "/commands")
-      ));
-    });
+  async guildCommands(gid){
+    const user = await this.user();
+    if(!this.cache.guildCommands)
+      this.cache.guildCommands = {};
+    return this.cache.guildCommands[gid] ?? (
+      this.cache.guildCommands[gid] = await this.rest.get("/applications/" + user.id + "/guilds/" + gid + "/commands")
+    );
   }
 
   // register a guild command
-  registerGuildCommand(gid, command){
-    return new Promise(async resolve => {
-      const user = await this.user();
-      const commands = await this.guildCommands(gid);
-      const result = await this.rest.post("/applications/" + user.id + "/guilds/" + gid + "/commands", command);
-      const same = commands.find(c => c.id == result.id);
-      if(same) this.cache.guildCommands[gid][commands.indexOf(same)] = result;
-      resolve(result);
-    });
+  async registerGuildCommand(gid, command){
+    const user = await this.user();
+    const commands = await this.guildCommands(gid);
+    const result = await this.rest.post("/applications/" + user.id + "/guilds/" + gid + "/commands", command);
+    const same = commands.find(c => c.id == result.id);
+    if(same) this.cache.guildCommands[gid][commands.indexOf(same)] = result;
+    return result;
   }
 
   // delete a guild command
-  deleteGuildCommand(gid, id){
-    return new Promise(async resolve => {
-      const user = await this.user();
-      const commands = await this.guildCommands(gid);
-      const result = await this.rest.del("/applications/" + user.id + "/guilds/" + gid + "/commands/" + id);
-      this.cache.guildCommands[gid] = commands.filter(c => c.id != id);
-      resolve(result);
-    });
+  async deleteGuildCommand(gid, id){
+    const user = await this.user();
+    const commands = await this.guildCommands(gid);
+    const result = await this.rest.del("/applications/" + user.id + "/guilds/" + gid + "/commands/" + id);
+    this.cache.guildCommands[gid] = commands.filter(c => c.id != id);
+    return result;
   }
 
   // login, creates a websocket connection to the gateway
@@ -105,7 +91,7 @@ class Bot {
       throw new Error("Session limit reached, reset after " + sessions.reset_after);
 
     const url = new URL(gateway.url);
-    url.searchParams.set("v", 9);
+    url.searchParams.set("v", 10);
     url.searchParams.set("encoding", "json");
 
     function connect(bot, resume){
