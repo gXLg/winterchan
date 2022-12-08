@@ -1,0 +1,22 @@
+{
+  "name": "winterchan",
+  "version": "0.0.1",
+  "description": "This is a repo for the [Snowcodes](https://www.snowcodes.org/) Hackathon. It includes a Discord bot written in Javascript with Node.js engine and powered by my custom made API library for Discord.",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gXLg/winterchan.git"
+  },
+  "author": "gXLg",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gXLg/winterchan/issues"
+  },
+  "homepage": "https://github.com/gXLg/winterchan#readme",
+  "dependencies": {
+    "ws": "^8.11.0"
+  }
+}
