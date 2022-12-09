@@ -14,8 +14,9 @@
 
   const me = await bot.user();
   console.log("Logging in as " + me.username + "...");
+  const debugChannel = "751448682393763856";
 
-  bot.events["READY"] = async data => {
+  bot.listenOnce("READY", async data => {
     console.log("Bot logged in!");
     bot.setStatus({
       "status" : "online",
@@ -27,17 +28,21 @@
       }]
     });
 
-    const testServer = "751448682393763856";
-    await bot.sendMessage(testServer, {
+    await bot.sendMessage(debugChannel, {
       "content": "I am alive!"
     });
-  };
+  });
+
+  bot.listen("INTERACTION_CREATE", async data => {
+    require_("./commands/" + data.data.name + ".js")(bot, data);
+  });
 
   // intents = 0
   bot.login(0);
 
+  // registering commands
   const commands = await bot.commands();
-  const should = require("./commands.json");
+  const should = require("./commands/list.json");
   const compare = require("./functions/compare.js");
   for(const s of should){
     const same = commands.find(c => c.name == s.name);
@@ -49,9 +54,7 @@
     await bot.registerCommand(s);
   }
   for(const c of commands){
-    if(
-      should.find(s => s.name == c.name)
-    ) continue;
+    if(should.find(s => s.name == c.name)) continue;
     console.log("Removing old command", c.name);
     await bot.deleteCommand(c.id);
   }

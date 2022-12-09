@@ -5,8 +5,8 @@ const { WebSocket } = require("ws");
 class Bot {
 
   cache = { };
-  events = { };
   sequence = null;
+  on = [];
   once = [];
   destroyed = false;
 
@@ -161,14 +161,20 @@ class Bot {
           if(payload.t == "READY") bot.sessionId = payload.d.session_id;
 
           // if there is a listener, then use it
-          (bot.events[payload.t] ?? (() => {}))(payload.d);
+          for(const listener of bot.on){
+            if(listener.event == payload.t){
+              listener.run(payload.d);
+            }
+          }
 
           // event listeners for single event
           // can be used with some filter, and timeout
           bot.once = bot.once.filter(listener => {
             if(listener.status.timedout) return false;
             if(listener.event != payload.t) return true;
-            if(!listener.filter(payload.d)) return true;
+            if(listener.filter)
+              if(!listener.filter(payload.d)) return true;
+            listener.run?.(payload.d);
             listener.resolve(payload.d);
             return false;
           });
@@ -310,11 +316,15 @@ class Bot {
     );
   }
 
+  // static listener
+  listen(event, run){
+    this.on.push({ event, run });
+  }
 
   // add one time listener
-  listenOnce(event, filter, timeout){
+  listenOnce(event, run, filter, timeout){
     return new TimePromise((resolve, reject, status) => {
-      this.once.push({event, filter, timeout, resolve, status});
+      this.once.push({event, run, filter, timeout, resolve, status});
     }, timeout);
   }
 
