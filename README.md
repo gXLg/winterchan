@@ -7,7 +7,7 @@ in Javascript with Node.js engine and powered
 by my custom made API library for Discord.
 
 The library is yet not Open Source, neither it is ready,
-but it has a name "disnode" and promises to be
+but it has a name "nullcord" and promises to be
 lightweight, fast and easy to use.
 
 The Discord bot is called "Winter Chan".
