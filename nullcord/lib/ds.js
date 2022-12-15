@@ -9,6 +9,7 @@ class Bot {
   on = [];
   once = [];
   destroyed = false;
+  error = false;
 
   constructor(token){
     this.token = token;
@@ -119,7 +120,7 @@ class Bot {
 
           if(resume){
             // if discord asked to reconnect
-            console.log("Sending resume payload");
+            console.debug("Sending resume payload");
             const resume = JSON.stringify({
               "op": 6,
               "d": {
@@ -130,7 +131,7 @@ class Bot {
             });
             bot.ws.send(resume);
           } else {
-            console.log("Sending identify payload");
+            console.debug("Sending identify payload");
             const identify = JSON.stringify({
               "op": 2,
               "d": {
@@ -147,13 +148,13 @@ class Bot {
           }
 
         } else if(payload.op == 9){
-          console.log("Discord asked to close and exit");
+          console.debug("Discord asked to close and exit");
           bot.recon = false;
           //bot.ws.close();
           //throw new Error("Invalid session!");
 
         } else if(payload.op == 7){
-          console.log("Discord asked to reconnect");
+          console.debug("Discord asked to reconnect");
           //bot.ws.close();
 
         } else if(payload.op == 0){
@@ -182,14 +183,19 @@ class Bot {
       });
       bot.ws.on("close", code => {
         clearInterval(bot.heart);
-        console.log("WebSocket closed with status", code);
+        console.debug("WebSocket closed with status", code);
         if(!bot.destroyed){
-          console.log("Trying to " + (bot.recon ? "re" : "") + "connect");
-          connect(bot, bot.recon);
+          console.debug("Trying to " + (bot.recon ? "re" : "") + "connect");
+          if(bot.error)
+            console.debug("Error happened, waiting 10 seconds...");
+          setTimeout(() => connect(bot, bot.recon), bot.error ? 10000 : 10);
+          bot.error = false;
         }
       });
       bot.ws.on("error", error => {
-        throw new Error(error);
+        //throw new Error(error);
+        console.error("Error:", error.message);
+        bot.error = true;
       });
     }
     connect(this, false);

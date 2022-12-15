@@ -9,7 +9,7 @@
   const fs = require("fs");
   const token = fs.readFileSync(".token", "UTF-8");
 
-  const ds = require("./disnode");
+  const ds = require("./nullcord");
   const bot = new ds.Bot(token);
 
   const me = await bot.user();
@@ -34,7 +34,8 @@
   });
 
   bot.listen("INTERACTION_CREATE", async data => {
-    require_("./commands/" + data.data.name + ".js")(bot, data);
+    if(data.type == 2) // APPLICATION_COMMAND
+      require_("./commands/" + data.data.name + ".js")(bot, data);
   });
 
   // intents = 0

@@ -30,7 +30,7 @@ class Database {
   }
   pull(entry, expect){
     return new Promise(async (res, rej) => {
-      const id = [this.id ++, "pull"];
+      const id = [this.id = (this.id + 1) % 65536, "pull"];
       this.worker.push(id);
       await this.wait(id);
       if(!(entry in this.data)){
@@ -43,7 +43,7 @@ class Database {
   }
   del(entry){
     return new Promise(async (res, rej) => {
-      const id = [this.id ++, "put"];
+      const id = [this.id = (this.id + 1) % 65536, "put"];
       this.worker.push(id);
       await this.wait(id);
       delete this.data[entry];
@@ -55,7 +55,7 @@ class Database {
   }
   put(entry, data){
     return new Promise(async (res, rej) => {
-      const id = [this.id ++, "put"];
+      const id = [this.id = (this.id + 1) % 65536, "put"];
       this.worker.push(id);
       await this.wait(id);
       this.data[entry] = data;
