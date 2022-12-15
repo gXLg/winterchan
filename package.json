@@ -1,6 +1,6 @@
 {
   "name": "winterchan",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "This is a repo for the [Snowcodes](https://www.snowcodes.org/) Hackathon. It includes a Discord bot written in Javascript with Node.js engine and powered by my custom made API library for Discord.",
   "main": "bot.js",
   "scripts": {
