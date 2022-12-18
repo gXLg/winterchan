@@ -6,5 +6,13 @@
   {
     "name": "snow",
     "description": "Play the snow game"
+  },
+  {
+    "name": "stat",
+    "description": "Show the leaderboard and your scores"
+  },
+  {
+    "name": "achieve",
+    "description": "Show your achievements"
   }
 ]

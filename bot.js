@@ -16,6 +16,10 @@
   console.log("Logging in as " + me.username + "...");
   const debugChannel = "751448682393763856";
 
+  const Database = require("./jsondb");
+  console.log("Initializing database...");
+  const db = new Database("./data.json");
+
   bot.listenOnce("READY", async data => {
     console.log("Bot logged in!");
     bot.setStatus({
@@ -35,7 +39,20 @@
 
   bot.listen("INTERACTION_CREATE", async data => {
     if(data.type == 2) // APPLICATION_COMMAND
-      require_("./commands/" + data.data.name + ".js")(bot, data);
+        require_("./commands/" + data.data.name + ".js")(
+          bot, data, db
+        ).catch(async e => {
+          console.error(e);
+          await bot.commandsResponse(data.id, data.token, {
+            "embeds": [
+              {
+                "description":
+                  "**An error occured**\n" + e
+              }
+            ],
+            "ephermal": true
+          });
+        });
   });
 
   // intents = 0
