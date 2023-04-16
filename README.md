@@ -21,3 +21,11 @@ I could not finish because of other things :(
 Anyways, it was still a lot of fun and brought
 me a lot of experience and improved my discord
 library
+
+# Update
+
+FYI: The library is now available on npm and is actively maintained, download:
+
+```
+npm install nullcord
+```
